@@ -1,0 +1,5 @@
+{
+  "buildCommand": "npm run build && cp -r public/* dist/",
+  "installCommand": "npm install",
+  "outputDirectory": "dist"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "CYDIA BACKEND",
+  "description": "Modern digital product studio — full-stack development, AI integration, and elegant design.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

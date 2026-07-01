@@ -1,0 +1,13 @@
+@import "tailwindcss";
+@theme {
+  --font-sans: "IBM Plex Sans Arabic", system-ui, sans-serif;
+  --color-primary: #3d8a5e;
+}
+*::-webkit-scrollbar { width: 6px; }
+*::-webkit-scrollbar-track { background: #edf4ed; }
+*::-webkit-scrollbar-thumb { background: #3d8a5e; border-radius: 3px; }
+body {
+  font-family: "IBM Plex Sans Arabic", system-ui, sans-serif;
+  background-color: #f5f9f5;
+  color: #1a2e22;
+}
