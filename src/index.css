@@ -1,13 +1,96 @@
 @import "tailwindcss";
+
+/* static token (doesn't change) */
 @theme {
-  --font-sans: "IBM Plex Sans Arabic", system-ui, sans-serif;
-  --color-primary: #3d8a5e;
+  --font-sans: "IBM Plex Sans Arabic", system.ui, sans-serif;
 }
+
+/* dynamic tokens: @theme inline binds the utility to a CSS var,
+   so swapping --color-* at runtime re-themes the whole site. */
+@theme inline {
+  --color-bg: var(--c-bg);
+  --color-surface: var(--c-surface);
+  --color-border: var(--c-border);
+  --color-muted: var(--c-muted);
+  --color-ink: var(--c-ink);
+  --color-primary: var(--c-primary);
+  --color-primary-hover: var(--c-primary-hover);
+  --color-whatsapp: #25d366; /* brand-constant, not themed */
+}
+
+/* ---------- Palettes (single source of truth lives in src/themes.ts) ---------- */
+:root,
+[data-theme="emerald"] {
+  --c-bg: #f5f9f5;
+  --c-surface: #edf4ed;
+  --c-border: #d4e2d8;
+  --c-muted: #5a7a63;
+  --c-ink: #1a2e22;
+  --c-primary: #3d8a5e;
+  --c-primary-hover: #2d6b46;
+}
+[data-theme="ocean"] {
+  --c-bg: #f0f7fb;
+  --c-surface: #e3eef6;
+  --c-border: #c7dceb;
+  --c-muted: #3f6b86;
+  --c-ink: #11263a;
+  --c-primary: #0e7490;
+  --c-primary-hover: #155e75;
+}
+[data-theme="sunset"] {
+  --c-bg: #fff6ef;
+  --c-surface: #fdeee4;
+  --c-border: #f6d8c6;
+  --c-muted: #b5643d;
+  --c-ink: #3d1a10;
+  --c-primary: #f97316;
+  --c-primary-hover: #ea580c;
+}
+[data-theme="violet"] {
+  --c-bg: #f6f5fc;
+  --c-surface: #ece9f9;
+  --c-border: #d8d2f0;
+  --c-muted: #6b5ca8;
+  --c-ink: #211a3a;
+  --c-primary: #6d28d9;
+  --c-primary-hover: #5b21b6;
+}
+[data-theme="midnight"] {
+  --c-bg: #0b0f14;
+  --c-surface: #141a22;
+  --c-border: #232c38;
+  --c-muted: #8b97a8;
+  --c-ink: #e8eef5;
+  --c-primary: #22d3ee;
+  --c-primary-hover: #06b6d4;
+}
+
+/* keep the pre-paint theme flash invisible until React/JS confirms */
+.preload * { transition: none !important; }
+
 *::-webkit-scrollbar { width: 6px; }
-*::-webkit-scrollbar-track { background: #edf4ed; }
-*::-webkit-scrollbar-thumb { background: #3d8a5e; border-radius: 3px; }
+*::-webkit-scrollbar-track { background: var(--c-surface); }
+*::-webkit-scrollbar-thumb { background: var(--c-primary); border-radius: 3px; }
 body {
   font-family: "IBM Plex Sans Arabic", system-ui, sans-serif;
-  background-color: #f5f9f5;
-  color: #1a2e22;
+  background-color: var(--c-bg);
+  color: var(--c-ink);
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+@keyframes floatBlob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(24px, -34px) scale(1.12); }
+}
+@keyframes floatBlobSlow {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-30px, 26px) scale(1.08); }
+}
+.animate-blob { animation: floatBlob 14s ease-in-out infinite; }
+.animate-blob-slow { animation: floatBlobSlow 20s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-blob,
+  .animate-blob-slow { animation: none; }
 }

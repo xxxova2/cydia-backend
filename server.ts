@@ -244,6 +244,71 @@ app.post("/api/consult", async (req, res) => {
   }
 });
 
+// API: Free NVIDIA NIM models
+// Supported models (all free on https://integrate.api.nvidia.com/v1):
+const NVIDIA_MODELS = [
+  "openai/gpt-oss-120b",
+  "deepseek-ai/deepseek-v4-pro",
+  "minimaxai/minimax-m3",
+  "z-ai/glm-5.2",
+  "qwen/qwen3.5-397b-a17b",
+] as const;
+
+type NvidiaModel = typeof NVIDIA_MODELS[number];
+
+app.post("/model", async (req, res) => {
+  const { message, model } = req.body;
+
+  if (!message) {
+    res.status(400).json({ error: "Message is required" });
+    return;
+  }
+
+  const selectedModel: NvidiaModel = NVIDIA_MODELS.includes(model)
+    ? model
+    : "openai/gpt-oss-120b";
+
+  if (!process.env.NVIDIA_API_KEY) {
+    res.status(500).json({ error: "NVIDIA_API_KEY is not configured" });
+    return;
+  }
+
+  try {
+    const response = await fetch("https://integrate.api.nvidia.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.NVIDIA_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: selectedModel,
+        messages: [
+          { role: "user", content: message }
+        ],
+        max_tokens: 4096,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("NVIDIA NIM Error:", errorText);
+      let detail = `NVIDIA API responded with ${response.status}`;
+      try {
+        const errJson = JSON.parse(errorText);
+        if (errJson.error?.message) detail = errJson.error.message;
+      } catch {}
+      throw new Error(detail);
+    }
+
+    const data = await response.json();
+    const content = data.choices?.[0]?.message?.content || "";
+    res.json({ model: selectedModel, response: content });
+  } catch (err: any) {
+    console.error("NVIDIA API Error:", err);
+    res.status(500).json({ error: "AI model error", details: err.message });
+  }
+});
+
 // Vite & Static file handling
 async function startServer() {
   if (process.env.NODE_ENV !== "production") {
