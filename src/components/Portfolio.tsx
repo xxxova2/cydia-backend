@@ -3,6 +3,13 @@ import { useState } from "react";
 
 const PROJECTS = [
   {
+    title: "Wodoh Alroya",
+    desc: "موقع شركة وضوح الرؤية للدعاية والإعلان — منصة متكاملة لاستعراض الخدمات والأعمال منذ 2009.",
+    tags: ["Next.js", "TypeScript", "Tailwind CSS"],
+    link: "https://wodoh-alroya.vercel.app/",
+    image: "https://images.unsplash.com/photo-1563986768609-322da13575f2?w=600&auto=format&fit=crop",
+  },
+  {
     title: "Rehab Store",
     desc: "متجر أزياء نسائية كامل مع Next.js — واجهة عربية وإنجليزية، دفع، وسلة مشتريات.",
     tags: ["Next.js", "TypeScript", "Google Apps Script"],
